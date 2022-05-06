@@ -6,13 +6,14 @@ fileName='solution.xlsx';
 kc= 1;
 
 temp = 10.0;
-N = 1240;
+%N = 1240;
+N = 281;
 tempN = 150.0;
 
 elemE = 1111;
 nodeHintA = 555;
 
-thresholdTempB = 48.0;
+thresholdTempB = 42.0;
 thresholdTempHintB = 70.0;
 
 %eval('mesh2x2Quad');
