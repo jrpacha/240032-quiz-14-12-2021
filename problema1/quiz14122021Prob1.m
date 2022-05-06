@@ -9,8 +9,9 @@ fOut = fileSols;
 Area=3250.0;     %section Area (in mm^2);
 Y=2.0e5;         %Young modulus, in N/mm^2 (1GP=1.0 kN/mm^2)
 
-%F=[29705;-20515;0.0]; %force applied to node 6
-F=[300000;-200000;0.0];
+%F=[29705;-20515;0.0]; %force applied to node 6 (in N)
+%F=[300000;-200000;0.0];
+F=[29525;-19398;0];
 
 % Data
 fOut=fopen(fileSols,'w');
@@ -23,7 +24,7 @@ fprintf(fOut,'\n');
 
 %Goemetry
 H=1800.0*sqrt(3.0);      %mm
-z=3536.0;                %mm
+z=3517.0;                %mm
 
 % nodes=[0.0,0.0,0.0;
 %        3600.0,0.0,0.0;
@@ -171,6 +172,6 @@ r2 = nodes(elem(e,1),:)' + u(rows);
 
 fprintf('(c) The final length of the most deformed bar is: %.5e\n',...
     maxLongElem)
-fprintf('    Hint. The y-component of the 1st. vertex of the bar\n')
-fprintf('          of maximum deformation is %.5e\n',r2(2))
+fprintf('    Hint. The x-component of the 1st. vertex of the bar\n')
+fprintf('          of maximum deformation is %.5e\n',r2(1))
 
