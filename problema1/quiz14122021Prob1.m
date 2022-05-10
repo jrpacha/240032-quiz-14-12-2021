@@ -157,21 +157,17 @@ fprintf('    Hint. The maximum of the x-displacements is %.4e\n',...
 longElem = zeros(numElem,1);
 deformation = zeros(numElem,1);
 U = [u(1:3:end),u(2:3:end),u(3:3:end)];
-for e = 1:numElem
-    r1 = nodes(elem(e,1),:) + U(elem(e,1),:);
-    r2 = nodes(elem(e,2),:) + U(elem(e,2),:);
-    longElem(e) = norm(r1-r2);
-    initialLenght = norm(nodes(elem(e,1),:)-nodes(elem(e,2),:));
-    deformation(e) = abs(longElem(e)-initialLenght);
-end
+
 %Note: deformation of the bar := |final length - initial length|
+L = nodes(elem(:,1),:)-nodes(elem(:,2),:);
+LD = L+U(elem(:,1),:)-U(elem(:,2),:);
+L = sqrt(L(:,1).^2+L(:,2).^2+L(:,3).^2);     %L(i): initial length of bar i
+LD = sqrt(LD(:,1).^2+LD(:,2).^2+LD(:,3).^2); %LD(i): final length of bar i
 
-[maxDeformation,e] = max(deformation);
-rows = [ndim*elem(e,1)-2;ndim*elem(e,1)-1;ndim*elem(e,1)];
-r2 = nodes(elem(e,1),:)' + u(rows);
+[~,e] = max(abs(L-LD)); %We find the most deformed bar
 
-fprintf('(c) The final length of the most deformed bar is: %.4e\n',...
-    longElem(e))
+fprintf('(c) The final length of the most deformed bar is: %.4e\n',LD(e))
 fprintf('    Hint. The x-component of the 1st. vertex of the bar\n')
-fprintf('          of maximum deformation is %.4e\n',r2(1))
+fprintf('          of maximum deformation is %.4e\n',...
+    nodes(elem(e,1),1)+U(elem(e,1),1))
 
