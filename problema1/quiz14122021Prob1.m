@@ -1,4 +1,4 @@
-Uclearvars
+clearvars
 close all
 
 % ==================================== P1 ==================================
@@ -9,17 +9,12 @@ fOut = fileSols;
 Area=3250.0;     %section Area (in mm^2);
 Y=2.0e5;         %Young modulus, in N/mm^2 (1GP=1.0 kN/mm^2)
 
-%F=[29705;-20515;0.0]; %force applied to node 6 (in N)
-%F=[300000;-200000;0.0];
 F=[29525;-19398;0];
 
 % Data
 fOut=fopen(fileSols,'w');
-%fprintf(fOut,'Length.............................. L = %e (mm)\n',      D);
-%fprintf(fOut,'Force............................... F = %e (N)\n',       F);
 fprintf(fOut,'Area............................. Area = %e (mm^2)\n', Area);
 fprintf(fOut,'Young modulus....................... Y = %e (N/mm^2)\n',  Y);
-%fprintf(fOut,'Num. nod. displ............... nodDisp = %d\n',     nodDisp);
 fprintf(fOut,'\n');
 
 %Goemetry
@@ -75,9 +70,9 @@ K=zeros(ndim*numNod);
 clc
 fprintf('\t\t ** Problema 1 **\n')
 Ke=spatialLinkStiffMatrix(nodes,elem,7,E,A);
-fprintf('(a) The value of the entry (3,4) of the local stiff matrix\n')
-fprintf('    for the seventh element is K7(3,4) = %.5e\n',Ke(3,4))
-fprintf('    Hint. The value of K7(4,5) = %.5e\n',Ke(4,5))     
+fprintf('(a) The value of the entry (3,4) of the local stiffness matrix\n')
+fprintf('    for the seventh element is K7(3,4) = %.4e\n',Ke(3,4))
+fprintf('    Hint. The value of K7(4,5) = %.4e\n',Ke(4,5))     
 
 for e=1:numElem
     Ke=spatialLinkStiffMatrix(nodes,elem,e,E,A);
@@ -154,24 +149,29 @@ u(freeNods)=um;
 
 %%% Part (b)
 fprintf('(b) The maximum of the displacements of the z-component of all\n')
-fprintf('    nodes is: %.5e\n',max(u(3:3:end)))
-fprintf('    Hint. The maximum of the x-displacements is %.5e\n',...
+fprintf('    nodes is: %.4e\n',max(u(3:3:end)))
+fprintf('    Hint. The maximum of the x-displacements is %.4e\n',...
     max(u(1:3:end)))
 
 %%% Part (c)
 longElem = zeros(numElem,1);
+deformation = zeros(numElem,1);
 U = [u(1:3:end),u(2:3:end),u(3:3:end)];
 for e = 1:numElem
     r1 = nodes(elem(e,1),:) + U(elem(e,1),:);
     r2 = nodes(elem(e,2),:) + U(elem(e,2),:);
     longElem(e) = norm(r1-r2);
+    initialLenght = norm(nodes(elem(e,1),:)-nodes(elem(e,2),:));
+    deformation(e) = abs(longElem(e)-initialLenght);
 end
-[maxLongElem,e] = max(longElem);
+%Note: deformation of the bar := |final length - initial length|
+
+[maxDeformation,e] = max(deformation);
 rows = [ndim*elem(e,1)-2;ndim*elem(e,1)-1;ndim*elem(e,1)];
 r2 = nodes(elem(e,1),:)' + u(rows);
 
-fprintf('(c) The final length of the most deformed bar is: %.5e\n',...
-    maxLongElem)
+fprintf('(c) The final length of the most deformed bar is: %.4e\n',...
+    longElem(e))
 fprintf('    Hint. The x-component of the 1st. vertex of the bar\n')
-fprintf('          of maximum deformation is %.5e\n',r2(1))
+fprintf('          of maximum deformation is %.4e\n',r2(1))
 
