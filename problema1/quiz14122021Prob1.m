@@ -57,6 +57,10 @@ numNod=size(nodes,1);
 numElem=size(elem,1);
 ndim=size(nodes,2);
 
+%Plot the structure
+numbering = 1;
+plotElements(nodes, elem, numbering);
+
 %Real constants
 A=Area*ones(1,numElem);
 E=Y*ones(1,numElem);
@@ -146,6 +150,10 @@ Km=K(freeNods,freeNods);
 %Solve the reduced system
 um=Km\Qm;
 u(freeNods)=um;
+
+%Plot deformed structure
+esc = 500;
+plotDeformedTruss(nodes, elem, u, esc);
 
 %%% Part (b)
 fprintf('(b) The maximum of the displacements of the z-component of all\n')
